@@ -1,12 +1,4 @@
 
-# My Schedule Module
-# This is a separate schedule app that extends the existing employee schedule functionality
-# It includes:
-# - Custom time off tracking
-# - Saturday signup
-# - Extra day signup
-# - Calendar view of all employee schedules
-
 from odoo import api, fields, models, _
 from datetime import datetime, timedelta
 
@@ -47,9 +39,28 @@ class MyScheduleTimeOff(models.Model):
     
     def action_approve(self):
         self.state = 'approved'
+        self._update_calendar()
     
     def action_reject(self):
         self.state = 'rejected'
+        
+    def _update_calendar(self):
+        """Update the calendar with time off entries"""
+        calendar_obj = self.env['my.schedule.calendar']
+        
+        # Calculate all days between start and end date
+        current_date = self.start_date
+        while current_date <= self.end_date:
+            # Create or update calendar entry
+            calendar_obj.create({
+                'employee_id': self.employee_id.id,
+                'date': current_date,
+                'schedule_type': 'off',
+                'start_time': 0.0,
+                'end_time': 0.0,
+                'hours': 0.0
+            })
+            current_date += timedelta(days=1)
 
 class MyScheduleSaturday(models.Model):
     _name = 'my.schedule.saturday'
@@ -74,9 +85,24 @@ class MyScheduleSaturday(models.Model):
     
     def action_confirm(self):
         self.state = 'confirmed'
+        self._update_calendar()
     
     def action_reject(self):
         self.state = 'rejected'
+    
+    def _update_calendar(self):
+        """Update the calendar with Saturday signup"""
+        calendar_obj = self.env['my.schedule.calendar']
+        
+        # Create or update calendar entry
+        calendar_obj.create({
+            'employee_id': self.employee_id.id,
+            'date': self.date,
+            'schedule_type': 'saturday',
+            'start_time': self.start_time,
+            'end_time': self.end_time,
+            'hours': self.hours
+        })
 
 class MyScheduleExtraDay(models.Model):
     _name = 'my.schedule.extra.day'
@@ -102,9 +128,24 @@ class MyScheduleExtraDay(models.Model):
     
     def action_confirm(self):
         self.state = 'confirmed'
+        self._update_calendar()
     
     def action_reject(self):
         self.state = 'rejected'
+    
+    def _update_calendar(self):
+        """Update the calendar with extra day signup"""
+        calendar_obj = self.env['my.schedule.calendar']
+        
+        # Create or update calendar entry
+        calendar_obj.create({
+            'employee_id': self.employee_id.id,
+            'date': self.date,
+            'schedule_type': 'extra',
+            'start_time': self.start_time,
+            'end_time': self.end_time,
+            'hours': self.hours
+        })
 
 class ScheduleCalendar(models.Model):
     _name = 'my.schedule.calendar'
@@ -133,7 +174,6 @@ class ScheduleCalendar(models.Model):
         for record in self:
             record.hours = record.end_time - record.start_time if record.start_time and record.end_time else 0
 
-# Extend HR Employee model to link to My Schedule
 class HrEmployee(models.Model):
     _inherit = 'hr.employee'
     
