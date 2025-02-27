@@ -1,0 +1,61 @@
+
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Add my schedule tabs to Employee form -->
+    <record id="hr_employee_view_form_inherit_my_schedule" model="ir.ui.view">
+        <field name="name">hr.employee.view.form.inherit.my.schedule</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">
+            <notebook position="inside">
+                <page string="Custom Time Off" groups="my_schedule.group_my_schedule_user">
+                    <button name="action_create_time_off" string="Request Time Off" type="object" class="oe_highlight"/>
+                    <field name="my_schedule_id" invisible="1"/>
+                    <field name="time_off_ids" context="{'default_employee_id': id}">
+                        <tree>
+                            <field name="start_date"/>
+                            <field name="end_date"/>
+                            <field name="reason"/>
+                            <field name="state"/>
+                        </tree>
+                    </field>
+                </page>
+                <page string="Extra Days" groups="my_schedule.group_my_schedule_user">
+                    <group>
+                        <group>
+                            <button name="action_create_saturday_signup" string="Saturday Signup" type="object" class="btn-primary"/>
+                        </group>
+                        <group>
+                            <button name="action_create_extra_day" string="Extra Day Request" type="object" class="btn-primary"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Saturday Signups">
+                            <field name="saturday_signup_ids" context="{'default_employee_id': id}">
+                                <tree>
+                                    <field name="date"/>
+                                    <field name="start_time" widget="float_time"/>
+                                    <field name="end_time" widget="float_time"/>
+                                    <field name="hours" widget="float_time"/>
+                                    <field name="state"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Extra Day Requests">
+                            <field name="extra_day_ids" context="{'default_employee_id': id}">
+                                <tree>
+                                    <field name="date"/>
+                                    <field name="start_time" widget="float_time"/>
+                                    <field name="end_time" widget="float_time"/>
+                                    <field name="hours" widget="float_time"/>
+                                    <field name="reason"/>
+                                    <field name="state"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </page>
+            </notebook>
+        </field>
+    </record>
+</odoo>

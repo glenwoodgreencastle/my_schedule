@@ -25,6 +25,8 @@
         'views/my_schedule_time_off_views.xml',
         'views/my_schedule_saturday_views.xml',
         'views/my_schedule_extra_day_views.xml',
+        'views/hr_employee_views.xml',
+        'data/ir_cron.xml',
     ],
     'demo': [],
     'application': True,

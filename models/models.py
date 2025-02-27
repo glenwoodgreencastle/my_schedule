@@ -178,3 +178,66 @@ class HrEmployee(models.Model):
     _inherit = 'hr.employee'
     
     my_schedule_id = fields.One2many('my.schedule', 'employee_id', string='My Schedule')
+    time_off_ids = fields.One2many(related='my_schedule_id.time_off_ids', string='Time Off Requests')
+    saturday_signup_ids = fields.One2many(related='my_schedule_id.saturday_signup_ids', string='Saturday Signups')
+    extra_day_ids = fields.One2many(related='my_schedule_id.extra_day_ids', string='Extra Day Signups')
+    
+    def action_create_time_off(self):
+        """Create a new time off request"""
+        # Ensure the employee has a my.schedule record
+        schedule = self.env['my.schedule'].search([('employee_id', '=', self.id)], limit=1)
+        if not schedule:
+            schedule = self.env['my.schedule'].create({'employee_id': self.id})
+        
+        # Open the time off request form
+        return {
+            'name': _('New Time Off Request'),
+            'type': 'ir.actions.act_window',
+            'res_model': 'my.schedule.time.off',
+            'view_mode': 'form',
+            'target': 'new',
+            'context': {
+                'default_schedule_id': schedule.id,
+                'default_employee_id': self.id,
+            }
+        }
+    
+    def action_create_saturday_signup(self):
+        """Create a new Saturday signup"""
+        # Ensure the employee has a my.schedule record
+        schedule = self.env['my.schedule'].search([('employee_id', '=', self.id)], limit=1)
+        if not schedule:
+            schedule = self.env['my.schedule'].create({'employee_id': self.id})
+        
+        # Open the Saturday signup form
+        return {
+            'name': _('New Saturday Signup'),
+            'type': 'ir.actions.act_window',
+            'res_model': 'my.schedule.saturday',
+            'view_mode': 'form',
+            'target': 'new',
+            'context': {
+                'default_schedule_id': schedule.id,
+                'default_employee_id': self.id,
+            }
+        }
+    
+    def action_create_extra_day(self):
+        """Create a new extra day request"""
+        # Ensure the employee has a my.schedule record
+        schedule = self.env['my.schedule'].search([('employee_id', '=', self.id)], limit=1)
+        if not schedule:
+            schedule = self.env['my.schedule'].create({'employee_id': self.id})
+        
+        # Open the extra day request form
+        return {
+            'name': _('New Extra Day Request'),
+            'type': 'ir.actions.act_window',
+            'res_model': 'my.schedule.extra.day',
+            'view_mode': 'form',
+            'target': 'new',
+            'context': {
+                'default_schedule_id': schedule.id,
+                'default_employee_id': self.id,
+            }
+        }
