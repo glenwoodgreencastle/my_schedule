@@ -1,4 +1,3 @@
-
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <!-- My Schedule Form View -->
@@ -50,7 +49,7 @@
             </form>
         </field>
     </record>
-    
+
     <!-- My Schedule List View -->
     <record id="view_my_schedule_list" model="ir.ui.view">
         <field name="name">my.schedule.list</field>
@@ -61,7 +60,7 @@
             </list>
         </field>
     </record>
-    
+
     <!-- My Schedule Search View -->
     <record id="view_my_schedule_search" model="ir.ui.view">
         <field name="name">my.schedule.search</field>
@@ -75,7 +74,7 @@
             </search>
         </field>
     </record>
-    
+
     <!-- Add My Schedule tab to Employee form -->
     <record id="hr_employee_view_form_inherit_my_schedule" model="ir.ui.view">
         <field name="name">hr.employee.view.form.inherit.my.schedule</field>
@@ -93,7 +92,7 @@
             </notebook>
         </field>
     </record>
-    
+
     <!-- Action window -->
     <record id="action_my_schedule" model="ir.actions.act_window">
         <field name="name">My Schedules</field>
@@ -106,13 +105,13 @@
             </p>
         </field>
     </record>
-    
+
     <!-- Menu items -->
     <menuitem id="menu_my_schedule_root" 
               name="My Schedule" 
               sequence="91" 
               groups="my_schedule.group_my_schedule_user"/>
-              
+
     <menuitem id="menu_my_schedule" 
               name="My Schedules" 
               parent="menu_my_schedule_root" 

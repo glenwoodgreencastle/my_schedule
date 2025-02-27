@@ -1,4 +1,3 @@
-
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <!-- Extra Day Signup Form View -->
@@ -38,7 +37,7 @@
             </form>
         </field>
     </record>
-    
+
     <!-- Extra Day Signup List View -->
     <record id="view_my_schedule_extra_day_list" model="ir.ui.view">
         <field name="name">my.schedule.extra.day.list</field>
@@ -55,7 +54,7 @@
             </list>
         </field>
     </record>
-    
+
     <!-- Extra Day Signup Search View -->
     <record id="view_my_schedule_extra_day_search" model="ir.ui.view">
         <field name="name">my.schedule.extra.day.search</field>
@@ -75,7 +74,7 @@
             </search>
         </field>
     </record>
-    
+
     <!-- Action window -->
     <record id="action_my_schedule_extra_day" model="ir.actions.act_window">
         <field name="name">Extra Day Signups</field>
@@ -88,7 +87,7 @@
             </p>
         </field>
     </record>
-    
+
     <!-- Menu item -->
     <menuitem id="menu_my_schedule_extra_day" 
               name="Extra Day Signups" 

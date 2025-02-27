@@ -12,12 +12,12 @@
                     <button name="action_create_time_off" string="Request Time Off" type="object" class="oe_highlight"/>
                     <field name="my_schedule_id" invisible="1"/>
                     <field name="time_off_ids" context="{'default_employee_id': id}">
-                        <tree>
+                        <list>
                             <field name="start_date"/>
                             <field name="end_date"/>
                             <field name="reason"/>
                             <field name="state"/>
-                        </tree>
+                        </list>
                     </field>
                 </page>
                 <page string="Extra Days" groups="my_schedule.group_my_schedule_user">
@@ -32,25 +32,25 @@
                     <notebook>
                         <page string="Saturday Signups">
                             <field name="saturday_signup_ids" context="{'default_employee_id': id}">
-                                <tree>
+                                <list>
                                     <field name="date"/>
                                     <field name="start_time" widget="float_time"/>
                                     <field name="end_time" widget="float_time"/>
                                     <field name="hours" widget="float_time"/>
                                     <field name="state"/>
-                                </tree>
+                                </list>
                             </field>
                         </page>
                         <page string="Extra Day Requests">
                             <field name="extra_day_ids" context="{'default_employee_id': id}">
-                                <tree>
+                                <list>
                                     <field name="date"/>
                                     <field name="start_time" widget="float_time"/>
                                     <field name="end_time" widget="float_time"/>
                                     <field name="hours" widget="float_time"/>
                                     <field name="reason"/>
                                     <field name="state"/>
-                                </tree>
+                                </list>
                             </field>
                         </page>
                     </notebook>

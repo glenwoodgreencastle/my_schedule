@@ -1,4 +1,3 @@
-
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <!-- Saturday Signup Form View -->
@@ -35,7 +34,7 @@
             </form>
         </field>
     </record>
-    
+
     <!-- Saturday Signup List View -->
     <record id="view_my_schedule_saturday_list" model="ir.ui.view">
         <field name="name">my.schedule.saturday.list</field>
@@ -51,7 +50,7 @@
             </list>
         </field>
     </record>
-    
+
     <!-- Saturday Signup Search View -->
     <record id="view_my_schedule_saturday_search" model="ir.ui.view">
         <field name="name">my.schedule.saturday.search</field>
@@ -71,7 +70,7 @@
             </search>
         </field>
     </record>
-    
+
     <!-- Action window -->
     <record id="action_my_schedule_saturday" model="ir.actions.act_window">
         <field name="name">Saturday Signups</field>
@@ -84,7 +83,7 @@
             </p>
         </field>
     </record>
-    
+
     <!-- Menu item -->
     <menuitem id="menu_my_schedule_saturday" 
               name="Saturday Signups" 
