@@ -1,12 +1,12 @@
-
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_my_schedule_user,my.schedule user,model_my_schedule,group_my_schedule_user,1,0,0,0
-access_my_schedule_manager,my.schedule manager,model_my_schedule,group_my_schedule_manager,1,1,1,1
-access_my_schedule_time_off_user,my.schedule.time.off user,model_my_schedule_time_off,group_my_schedule_user,1,1,1,0
-access_my_schedule_time_off_manager,my.schedule.time.off manager,model_my_schedule_time_off,group_my_schedule_manager,1,1,1,1
-access_my_schedule_saturday_user,my.schedule.saturday user,model_my_schedule_saturday,group_my_schedule_user,1,1,1,0
-access_my_schedule_saturday_manager,my.schedule.saturday manager,model_my_schedule_saturday,group_my_schedule_manager,1,1,1,1
-access_my_schedule_extra_day_user,my.schedule.extra.day user,model_my_schedule_extra_day,group_my_schedule_user,1,1,1,0
-access_my_schedule_extra_day_manager,my.schedule.extra.day manager,model_my_schedule_extra_day,group_my_schedule_manager,1,1,1,1
-access_my_schedule_calendar_user,my.schedule.calendar user,model_my_schedule_calendar,group_my_schedule_user,1,0,0,0
-access_my_schedule_calendar_manager,my.schedule.calendar manager,model_my_schedule_calendar,group_my_schedule_manager,1,1,1,1
+access_my_schedule_user,my.schedule user,my_schedule.model_my_schedule,my_schedule.group_my_schedule_user,1,0,0,0
+access_my_schedule_manager,my.schedule manager,my_schedule.model_my_schedule,my_schedule.group_my_schedule_manager,1,1,1,1
+access_my_schedule_time_off_user,my.schedule.time.off user,my_schedule.model_my_schedule_time_off,my_schedule.group_my_schedule_user,1,1,1,0
+access_my_schedule_time_off_manager,my.schedule.time.off manager,my_schedule.model_my_schedule_time_off,my_schedule.group_my_schedule_manager,1,1,1,1
+access_my_schedule_saturday_user,my.schedule.saturday user,my_schedule.model_my_schedule_saturday,my_schedule.group_my_schedule_user,1,1,1,0
+access_my_schedule_saturday_manager,my.schedule.saturday manager,my_schedule.model_my_schedule_saturday,my_schedule.group_my_schedule_manager,1,1,1,1
+access_my_schedule_extra_day_user,my.schedule.extra.day user,my_schedule.model_my_schedule_extra_day,my_schedule.group_my_schedule_user,1,1,1,0
+access_my_schedule_extra_day_manager,my.schedule.extra.day manager,my_schedule.model_my_schedule_extra_day,my_schedule.group_my_schedule_manager,1,1,1,1
+access_my_schedule_calendar_user,my.schedule.calendar user,my_schedule.model_my_schedule_calendar,my_schedule.group_my_schedule_user,1,0,0,0
+access_my_schedule_calendar_manager,my.schedule.calendar manager,my_schedule.model_my_schedule_calendar,my_schedule.group_my_schedule_manager,1,1,1,1
+access_my_schedule_calendar_sync,my.schedule.calendar.sync access,my_schedule.model_my_schedule_calendar_sync,my_schedule.group_my_schedule_manager,1,1,1,1
