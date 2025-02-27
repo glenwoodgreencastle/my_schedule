@@ -34,6 +34,16 @@ class MyScheduleTimeOff(models.Model):
         ('rejected', 'Rejected')
     ], string='Status', default='draft')
     
+    # New field to check if current user is a manager
+    is_manager = fields.Boolean(string='Is Manager', compute='_compute_is_manager')
+    
+    @api.depends_context('uid')
+    def _compute_is_manager(self):
+        """Check if the current user is a manager"""
+        is_manager = self.env.user.has_group('my_schedule.group_my_schedule_manager')
+        for record in self:
+            record.is_manager = is_manager
+    
     def action_submit(self):
         self.state = 'submitted'
     
