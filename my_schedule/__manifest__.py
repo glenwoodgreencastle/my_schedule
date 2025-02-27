@@ -17,16 +17,16 @@
     'website': 'https://www.yourcompany.com',
     'depends': ['hr', 'employee_schedule'],
     'data': [
-        # Load views that define models first
+        # First load security files
+        'security/my_schedule_security.xml',
+        'security/ir.model.access.csv',
+        # Then load views
         'views/my_schedule_views.xml',
         'views/my_schedule_calendar_views.xml',
         'views/my_schedule_time_off_views.xml',
         'views/my_schedule_saturday_views.xml',
         'views/my_schedule_extra_day_views.xml',
         'views/hr_employee_views.xml',
-        # Then load security files
-        'security/my_schedule_security.xml',
-        'security/ir.model.access.csv',
         # Other data
         'data/ir_cron.xml',
     ],
