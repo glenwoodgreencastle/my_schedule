@@ -28,6 +28,11 @@
         'views/hr_employee_views.xml',
         'data/ir_cron.xml',
     ],
+    'assets': {
+        'web.assets_backend': [
+            'my_schedule/static/src/scss/my_schedule.scss',
+        ],
+    },
     'demo': [],
     'application': True,
     'sequence': 105,  # Position after employee_schedule

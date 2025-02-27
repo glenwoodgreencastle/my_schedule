@@ -1,0 +1,18 @@
+
+/* My Schedule Module Styling */
+.o_my_schedule_calendar {
+    .fc-event.time_off {
+        background-color: #ffcdd2;
+        border-color: #e57373;
+    }
+    
+    .fc-event.saturday {
+        background-color: #ffe082;
+        border-color: #ffd54f;
+    }
+    
+    .fc-event.extra_day {
+        background-color: #c8e6c9;
+        border-color: #81c784;
+    }
+}
