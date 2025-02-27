@@ -1,0 +1,372 @@
+
+==================================================
+📂 FILE: C:\GitHub\employee_schedule\employee_schedule\__init__.py
+==================================================
+
+
+from . import models
+
+
+
+==================================================
+📂 FILE: C:\GitHub\employee_schedule\employee_schedule\__manifest__.py
+==================================================
+
+{
+    'name': 'Schedule',
+    'version': '18.0.1.0.0',
+    'category': 'Human Resources',
+    'summary': 'Manage employee work schedules separately from standard HR module',
+    'description': """
+        Schedule
+        =======================
+        This module allows you to manage employee work schedules separately from the community HR module.
+        Features:
+        - Set individual work schedules for each employee
+        - Configure working hours for Monday to Saturday
+        - Link schedules directly to employees
+    """,
+    'author': 'Your Company',
+    'website': 'https://www.yourcompany.com',
+    'depends': ['hr'],
+    'data': [
+        'security/employee_schedule_security.xml',
+        'security/ir.model.access.csv',
+        'views/employee_schedule_views.xml',
+    ],
+    'demo': [],
+    'application': True,
+    'sequence': 100,  # Controls positioning in the apps menu
+    'category': 'Human Resources',  # Make sure this matches a valid category
+    'application': True,  # Change this from False to True
+    'auto_install': False,
+    'license': 'LGPL-3',
+}
+
+
+==================================================
+📂 FILE: C:\GitHub\employee_schedule\employee_schedule\models\employee_schedule.py
+==================================================
+
+
+from odoo import api, fields, models, _
+
+class EmployeeSchedule(models.Model):
+    _name = 'employee.custom.schedule'
+    _description = 'Custom Employee Schedule'
+    _rec_name = 'employee_id'
+    
+    employee_id = fields.Many2one('hr.employee', string='Employee', required=True)
+    
+    # Monday schedule
+    monday_active = fields.Boolean(string='Works on Monday', default=True)
+    monday_start = fields.Float(string='Monday Start Time')
+    monday_end = fields.Float(string='Monday End Time')
+    
+    # Tuesday schedule
+    tuesday_active = fields.Boolean(string='Works on Tuesday', default=True)
+    tuesday_start = fields.Float(string='Tuesday Start Time')
+    tuesday_end = fields.Float(string='Tuesday End Time')
+    
+    # Wednesday schedule
+    wednesday_active = fields.Boolean(string='Works on Wednesday', default=True)
+    wednesday_start = fields.Float(string='Wednesday Start Time')
+    wednesday_end = fields.Float(string='Wednesday End Time')
+    
+    # Thursday schedule
+    thursday_active = fields.Boolean(string='Works on Thursday', default=True)
+    thursday_start = fields.Float(string='Thursday Start Time')
+    thursday_end = fields.Float(string='Thursday End Time')
+    
+    # Friday schedule
+    friday_active = fields.Boolean(string='Works on Friday', default=True)
+    friday_start = fields.Float(string='Friday Start Time')
+    friday_end = fields.Float(string='Friday End Time')
+    
+    # Saturday schedule
+    saturday_active = fields.Boolean(string='Works on Saturday', default=False)
+    saturday_start = fields.Float(string='Saturday Start Time')
+    saturday_end = fields.Float(string='Saturday End Time')
+    
+    # Compute fields for display
+    monday_hours = fields.Float(string='Monday Hours', compute='_compute_hours')
+    tuesday_hours = fields.Float(string='Tuesday Hours', compute='_compute_hours')
+    wednesday_hours = fields.Float(string='Wednesday Hours', compute='_compute_hours')
+    thursday_hours = fields.Float(string='Thursday Hours', compute='_compute_hours')
+    friday_hours = fields.Float(string='Friday Hours', compute='_compute_hours')
+    saturday_hours = fields.Float(string='Saturday Hours', compute='_compute_hours')
+    
+    total_hours = fields.Float(string='Total Hours per Week', compute='_compute_total_hours')
+    
+    @api.depends('monday_start', 'monday_end', 'tuesday_start', 'tuesday_end',
+                 'wednesday_start', 'wednesday_end', 'thursday_start', 'thursday_end',
+                 'friday_start', 'friday_end', 'saturday_start', 'saturday_end',
+                 'monday_active', 'tuesday_active', 'wednesday_active',
+                 'thursday_active', 'friday_active', 'saturday_active')
+    def _compute_hours(self):
+        for record in self:
+            # Calculate hours for each day
+            record.monday_hours = (record.monday_end - record.monday_start) if record.monday_active else 0
+            record.tuesday_hours = (record.tuesday_end - record.tuesday_start) if record.tuesday_active else 0
+            record.wednesday_hours = (record.wednesday_end - record.wednesday_start) if record.wednesday_active else 0
+            record.thursday_hours = (record.thursday_end - record.thursday_start) if record.thursday_active else 0
+            record.friday_hours = (record.friday_end - record.friday_start) if record.friday_active else 0
+            record.saturday_hours = (record.saturday_end - record.saturday_start) if record.saturday_active else 0
+    
+    @api.depends('monday_hours', 'tuesday_hours', 'wednesday_hours', 
+                 'thursday_hours', 'friday_hours', 'saturday_hours')
+    def _compute_total_hours(self):
+        for record in self:
+            record.total_hours = (
+                record.monday_hours +
+                record.tuesday_hours +
+                record.wednesday_hours +
+                record.thursday_hours +
+                record.friday_hours +
+                record.saturday_hours
+            )
+
+class HrEmployee(models.Model):
+    _inherit = 'hr.employee'
+    
+    custom_schedule_ids = fields.One2many('employee.custom.schedule', 'employee_id', string='Custom Schedules')
+    active_custom_schedule_id = fields.Many2one('employee.custom.schedule', string='Active Custom Schedule')
+
+
+
+==================================================
+📂 FILE: C:\GitHub\employee_schedule\employee_schedule\models\__init__.py
+==================================================
+
+
+from . import employee_schedule
+
+
+
+==================================================
+📂 FILE: C:\GitHub\employee_schedule\employee_schedule\security\employee_schedule_security.xml
+==================================================
+
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <!-- Security groups -->
+        <record id="group_employee_schedule_user" model="res.groups">
+            <field name="name">Employee Schedule User</field>
+            <field name="category_id" ref="base.module_category_human_resources"/>
+            <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+        </record>
+
+        <record id="group_employee_schedule_manager" model="res.groups">
+            <field name="name">Employee Schedule Manager</field>
+            <field name="category_id" ref="base.module_category_human_resources"/>
+            <field name="implied_ids" eval="[(4, ref('group_employee_schedule_user'))]"/>
+            <field name="users" eval="[(4, ref('base.user_admin'))]"/>
+        </record>
+
+        <!-- Record rules -->
+        <record id="employee_schedule_employee_rule" model="ir.rule">
+            <field name="name">Employee Schedule: Employees see only their own schedules</field>
+            <field name="model_id" ref="model_employee_custom_schedule"/>
+            <field name="domain_force">[('employee_id.user_id', '=', user.id)]</field>
+            <field name="groups" eval="[(4, ref('group_employee_schedule_user'))]"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_write" eval="0"/>
+            <field name="perm_create" eval="0"/>
+            <field name="perm_unlink" eval="0"/>
+        </record>
+
+        <record id="employee_schedule_manager_rule" model="ir.rule">
+            <field name="name">Employee Schedule: Managers see all schedules</field>
+            <field name="model_id" ref="model_employee_custom_schedule"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[(4, ref('group_employee_schedule_manager'))]"/>
+        </record>
+    </data>
+</odoo>
+
+
+==================================================
+📂 FILE: C:\GitHub\employee_schedule\employee_schedule\security\ir.model.access.csv
+==================================================
+
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_employee_custom_schedule_user,employee.custom.schedule user,employee_schedule.model_employee_custom_schedule,employee_schedule.group_employee_schedule_user,1,0,0,0
+access_employee_custom_schedule_manager,employee.custom.schedule manager,employee_schedule.model_employee_custom_schedule,employee_schedule.group_employee_schedule_manager,1,1,1,1
+
+
+==================================================
+📂 FILE: C:\GitHub\employee_schedule\employee_schedule\static\description\icon.png
+==================================================
+
+⚠️ Could not read file: 'utf-8' codec can't decode byte 0x89 in position 0: invalid start byte
+
+
+
+==================================================
+📂 FILE: C:\GitHub\employee_schedule\employee_schedule\views\employee_schedule_views.xml
+==================================================
+
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Schedule Form View -->
+    <record id="view_employee_custom_schedule_form" model="ir.ui.view">
+        <field name="name">employee.custom.schedule.form</field>
+        <field name="model">employee.custom.schedule</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="employee_id"/>
+                    </group>
+                    <notebook>
+                        <page string="Weekly Schedule">
+                            <group>
+                                <group string="Monday">
+                                    <field name="monday_active"/>
+                                    <field name="monday_start" widget="float_time" invisible="not monday_active"/>
+                                    <field name="monday_end" widget="float_time" invisible="not monday_active"/>
+                                    <field name="monday_hours" widget="float_time" readonly="1" invisible="not monday_active"/>
+                                </group>
+                                <group string="Tuesday">
+                                    <field name="tuesday_active"/>
+                                    <field name="tuesday_start" widget="float_time" invisible="not tuesday_active"/>
+                                    <field name="tuesday_end" widget="float_time" invisible="not tuesday_active"/>
+                                    <field name="tuesday_hours" widget="float_time" readonly="1" invisible="not tuesday_active"/>
+                                </group>
+                                <group string="Wednesday">
+                                    <field name="wednesday_active"/>
+                                    <field name="wednesday_start" widget="float_time" invisible="not wednesday_active"/>
+                                    <field name="wednesday_end" widget="float_time" invisible="not wednesday_active"/>
+                                    <field name="wednesday_hours" widget="float_time" readonly="1" invisible="not wednesday_active"/>
+                                </group>
+                                <group string="Thursday">
+                                    <field name="thursday_active"/>
+                                    <field name="thursday_start" widget="float_time" invisible="not thursday_active"/>
+                                    <field name="thursday_end" widget="float_time" invisible="not thursday_active"/>
+                                    <field name="thursday_hours" widget="float_time" readonly="1" invisible="not thursday_active"/>
+                                </group>
+                                <group string="Friday">
+                                    <field name="friday_active"/>
+                                    <field name="friday_start" widget="float_time" invisible="not friday_active"/>
+                                    <field name="friday_end" widget="float_time" invisible="not friday_active"/>
+                                    <field name="friday_hours" widget="float_time" readonly="1" invisible="not friday_active"/>
+                                </group>
+                                <group string="Saturday">
+                                    <field name="saturday_active"/>
+                                    <field name="saturday_start" widget="float_time" invisible="not saturday_active"/>
+                                    <field name="saturday_end" widget="float_time" invisible="not saturday_active"/>
+                                    <field name="saturday_hours" widget="float_time" readonly="1" invisible="not saturday_active"/>
+                                </group>
+                                <group class="oe_subtotal_footer">
+                                    <field name="total_hours" widget="float_time" class="oe_subtotal_footer_separator"/>
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    
+    <!-- Schedule List View (changed from tree in Odoo 18) -->
+    <record id="view_employee_custom_schedule_list" model="ir.ui.view">
+        <field name="name">employee.custom.schedule.list</field>
+        <field name="model">employee.custom.schedule</field>
+        <field name="arch" type="xml">
+            <list string="Employee Schedules">
+                <field name="employee_id"/>
+                <field name="monday_hours" widget="float_time" sum="Total Monday"/>
+                <field name="tuesday_hours" widget="float_time" sum="Total Tuesday"/>
+                <field name="wednesday_hours" widget="float_time" sum="Total Wednesday"/>
+                <field name="thursday_hours" widget="float_time" sum="Total Thursday"/>
+                <field name="friday_hours" widget="float_time" sum="Total Friday"/>
+                <field name="saturday_hours" widget="float_time" sum="Total Saturday"/>
+                <field name="total_hours" widget="float_time" sum="Total Hours"/>
+            </list>
+        </field>
+    </record>
+    
+    <!-- Schedule Search View -->
+    <record id="view_employee_custom_schedule_search" model="ir.ui.view">
+        <field name="name">employee.custom.schedule.search</field>
+        <field name="model">employee.custom.schedule</field>
+        <field name="arch" type="xml">
+            <search string="Search Employee Schedules">
+                <field name="employee_id"/>
+                <filter string="Works Monday" name="monday_workers" domain="[('monday_active', '=', True)]"/>
+                <filter string="Works Tuesday" name="tuesday_workers" domain="[('tuesday_active', '=', True)]"/>
+                <filter string="Works Wednesday" name="wednesday_workers" domain="[('wednesday_active', '=', True)]"/>
+                <filter string="Works Thursday" name="thursday_workers" domain="[('thursday_active', '=', True)]"/>
+                <filter string="Works Friday" name="friday_workers" domain="[('friday_active', '=', True)]"/>
+                <filter string="Works Saturday" name="saturday_workers" domain="[('saturday_active', '=', True)]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Employee" name="employee" domain="[]" context="{'group_by': 'employee_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+    
+    <!-- Comment out the Calendar view since it uses float fields instead of datetime fields -->
+    <!-- 
+    <record id="view_employee_custom_schedule_calendar" model="ir.ui.view">
+        <field name="name">employee.custom.schedule.calendar</field>
+        <field name="model">employee.custom.schedule</field>
+        <field name="arch" type="xml">
+            <calendar string="Employee Schedules" date_start="monday_start" color="employee_id">
+                <field name="employee_id"/>
+                <field name="total_hours" widget="float_time"/>
+            </calendar>
+        </field>
+    </record>
+    -->
+    
+    <!-- Add Schedule tab to Employee form -->
+    <record id="hr_employee_view_form_inherit_schedule" model="ir.ui.view">
+        <field name="name">hr.employee.view.form.inherit.schedule</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">
+            <notebook position="inside">
+                <page string="Custom Schedule" groups="hr.group_hr_user">
+                    <field name="custom_schedule_ids" context="{'default_employee_id': id}">
+                        <list>
+                            <field name="create_date" string="Created On"/>
+                            <field name="total_hours" widget="float_time"/>
+                        </list>
+                    </field>
+                    <group>
+                        <field name="active_custom_schedule_id" domain="[('employee_id', '=', id)]"/>
+                    </group>
+                </page>
+            </notebook>
+        </field>
+    </record>
+    
+    <!-- Action window -->
+    <record id="action_employee_custom_schedule" model="ir.actions.act_window">
+        <field name="name">Employee Schedules</field>
+        <field name="res_model">employee.custom.schedule</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_employee_custom_schedule_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create the first employee schedule
+            </p>
+        </field>
+    </record>
+    
+    <!-- Menu item -->
+    <menuitem id="menu_employee_custom_schedule_root" 
+              name="Custom Schedules" 
+              parent="hr.menu_hr_root" 
+              sequence="90" 
+              groups="hr.group_hr_user"/>
+              
+    <menuitem id="menu_employee_custom_schedule" 
+              name="Employee Schedules" 
+              parent="menu_employee_custom_schedule_root" 
+              action="action_employee_custom_schedule" 
+              sequence="1"/>
+</odoo>
+
