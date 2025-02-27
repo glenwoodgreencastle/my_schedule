@@ -1,4 +1,3 @@
-
 {
     'name': 'My Schedule',
     'version': '18.0.1.0.0',
@@ -18,14 +17,17 @@
     'website': 'https://www.yourcompany.com',
     'depends': ['hr', 'employee_schedule'],
     'data': [
-        'security/my_schedule_security.xml',
-        'security/ir.model.access.csv',
+        # Load views that define models first
         'views/my_schedule_views.xml',
         'views/my_schedule_calendar_views.xml',
         'views/my_schedule_time_off_views.xml',
         'views/my_schedule_saturday_views.xml',
         'views/my_schedule_extra_day_views.xml',
         'views/hr_employee_views.xml',
+        # Then load security files
+        'security/my_schedule_security.xml',
+        'security/ir.model.access.csv',
+        # Other data
         'data/ir_cron.xml',
     ],
     'assets': {
